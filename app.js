@@ -1,9 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
+const bodyParser = require('body-parser');
+
+const cors = require('cors');
+const expressValidator = require('express-validator');
 require('dotenv').config();
 const app = express();
 
-const dashboardRoutes = require('./routes/dashboard')
+//Routes
+const dashboardRoutes = require('./routes/dashboard');
+const slotRoutes = require('./routes/slots');
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true, 
@@ -15,8 +22,17 @@ mongoose.connection.on('error', err => {
     console.log(`DB connection error: ${err.message}`)
   });
 
+
+
+
+app.use(bodyParser.json());
+
+// app.use(expressValidator());
+app.use(cors());
+
 //routes middleware
-app.use(dashboardRoutes);
+app.use('/api', dashboardRoutes);
+app.use('/api', slotRoutes);
 
 const port = process.env.PORT || 8009;
 

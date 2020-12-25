@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 
 
-const AddSlot = () => {
+const ListSlots = () => {
 
 }
 
-export default AddSlot;
+export default ListSlots;
