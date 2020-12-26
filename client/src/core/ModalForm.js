@@ -82,7 +82,7 @@ const ModalForm = (props) => {
                     </div>
                 </div>
                 <Button onClick={handleSubmit}>Add</Button>
-                {/* {props.success && <span className="col md-8">Slot added successfully!</span>} */}
+                {props.error && <span className="col md-8">{props.error}</span>}
             </form>
                 
             </Modal.Body>

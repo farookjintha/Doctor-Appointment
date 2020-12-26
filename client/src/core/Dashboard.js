@@ -37,6 +37,7 @@ const Dashboard = () => {
 
     useEffect(()=>{
         listSlots();
+        displaySlots();
     }, []);
 
     useEffect(()=> {
@@ -64,7 +65,7 @@ const Dashboard = () => {
         let month = dateForSlotDisplay.getMonth() + 1;
         let year = dateForSlotDisplay.getFullYear();
 
-        searchData(new Date(`${month} ${day} ${year}`));
+        searchData(`${month} ${day} ${year}`);
     }
     
     const selectDate = () =>(
@@ -83,7 +84,7 @@ const Dashboard = () => {
 
     const handleSubmit = (event) => {
         // console.log(showModal);
-        setShowModal(!showModal);
+        // setShowModal(!showModal);
         let day = selectedDate.getDate();
         let month = selectedDate.getMonth() + 1;
         let year = selectedDate.getFullYear();
@@ -94,25 +95,36 @@ const Dashboard = () => {
         let endHr = endTime.getHours();
         let endMin = endTime.getMinutes();
         
-        let modifiedSelectedDate = new Date(`${month} ${day} ${year}`);
-        let modifiedStartTime = new Date(`${month} ${day} ${year} ${startHr}:${startMin}`);
-        let modifiedEndTime = new Date(`${month} ${day} ${year} ${endHr}:${endMin}`);
+        let modifiedSelectedDate = `${month} ${day} ${year}`;
+        let modifiedStartTime = `${month} ${day} ${year} ${startHr}:${startMin}`
+        let modifiedEndTime = `${month} ${day} ${year} ${endHr}:${endMin}`
 
-        let payload = {
-            selectedDate: modifiedSelectedDate,
-            startTime: modifiedStartTime,
-            endTime: modifiedEndTime,
-            isBooked
-        }
-        createSlot(payload).then(data => {
-            if(data.error){
-                setError(data.error)
-            }else{
-                setError('');
-                setSuccess(true);
+        let diffTime1 = new Date(`${month} ${day} ${year} ${startHr}:${startMin}`)
+        let diffTime2 = new Date(`${month} ${day} ${year} ${endHr}:${endMin}`)
+        console.log("End  > Start : ",(diffTime2.getTime() > diffTime1.getTime()))
+        console.log("Time Difference: ", (diffTime2.getTime() - diffTime1.getTime()))
+
+        if((diffTime2.getTime() > diffTime1.getTime()) && ((diffTime2.getTime() - diffTime1.getTime()) <= 30*60*1000)){    
+            let payload = {
+                selectedDate: modifiedSelectedDate,
+                startTime: modifiedStartTime,
+                endTime: modifiedEndTime,
+                isBooked
             }
-        });
-        console.log(payload)
+            createSlot(payload).then(data => {
+                if(data.error){
+                    setError(data.error)
+                }else{
+                    setError('');
+                    setSuccess(true);
+                }
+            });
+            console.log(payload)
+        }else{
+            diffTime2.getTime() < diffTime1.getTime() ? setError("End Time should be greater than Start Time") : 
+                setError("Slot time should not exceed 30 min")
+        }
+        
     }
 
     const handleSelectedDate = (date) => {
@@ -132,7 +144,20 @@ const Dashboard = () => {
         setEndTime(date);
         console.log("EndTime from Props: ", endTime);
     }
-
+     
+    const displaySlots = () => (
+        <div>
+            <h2>List Slots:</h2> {selectDate()}
+                {/* {JSON.stringify(slotResult)} */}
+            <div className="row">
+                {slotResult.map((slot, i) => (
+                    <div key={i} className="col-xs">
+                        <DisplayItem item={slot} />
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
     
     
     
@@ -151,15 +176,7 @@ const Dashboard = () => {
                 </ul>
                 </div>
                     <div className="container">
-                        <h2>List Slots:</h2> {selectDate()}
-                            {/* {JSON.stringify(slotResult)} */}
-                        <div className="row">
-                            {slotResult.map((slot, i) => (
-                                <div key={i} className="col-xs">
-                                    <DisplayItem item={slot} />
-                                </div>
-                            ))}
-                        </div>
+                        {displaySlots()}
                     </div>
                 
                 <div className="container">

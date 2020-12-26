@@ -26,3 +26,16 @@ exports.list =(req, res) => {
         res.json(slots);
     });
 }
+
+exports.listSearch = (req, res) => {
+    //create query object to hold search value and category
+    
+        Slot.find(req.query, (err, products) => {
+            if(err){
+                return res.status(400).json({
+                    error: errorHandler(err)
+                })
+            }
+            res.json(products)
+        })
+    }

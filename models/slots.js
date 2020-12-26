@@ -2,16 +2,18 @@ const mongoose = require('mongoose');
 
 const slotSchema = new mongoose.Schema({
     selectedDate: {
-        type: Date,
+        type: String,
         required: true
     },
     startTime:{
-        type: Date,
-        required: true
+        type: String,
+        required: true,
+        unique: true
     },
     endTime:{
-        type: Date,
-        required: true
+        type: String,
+        required: true,
+        unique: true
     },
     isBooked:{
         type: Boolean,
