@@ -1,8 +1,7 @@
-import {API} from '../config';
-
+import queryString from 'query-string';
 
 export const createSlot = (slot) => {
-    return fetch(`${API}/slot/create`, {
+    return fetch(`http://localhost:8009/api/slot/create`, {
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -19,7 +18,19 @@ export const createSlot = (slot) => {
 
 
 export const getSlots = () => {
-    return fetch(`${API}/slots`, {
+    return fetch(`http://localhost:8009/api/slots`, {
+        method: "GET"
+    })
+    .then(res => {
+        return res.json()
+    })
+    .catch(error => console.log(error));
+}
+
+export const list = (params) => {
+    const query = queryString.stringify(params)
+    console.log(query);
+    return fetch(`http://localhost:8009/api/slots/search?${query}`, {
         method: "GET"
     })
     .then(res => {

@@ -15,3 +15,14 @@ exports.create = (req, res) => {
         res.json({data});
     });
 }
+
+exports.list =(req, res) => {
+    Slot.find().exec((err, slots) => {
+        if(err){
+            return res.status(400).json({
+                error: errorHandler(err)
+            });
+        }
+        res.json(slots);
+    });
+}
