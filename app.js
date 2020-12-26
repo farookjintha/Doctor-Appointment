@@ -4,13 +4,14 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const cors = require('cors');
-const expressValidator = require('express-validator');
+
 require('dotenv').config();
 const app = express();
 
 //Routes
 const dashboardRoutes = require('./routes/dashboard');
 const slotRoutes = require('./routes/slots');
+const appointmentRoutes = require('./routes/appointment');
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true, 
@@ -26,13 +27,12 @@ mongoose.connection.on('error', err => {
 
 
 app.use(bodyParser.json());
-
-// app.use(expressValidator());
 app.use(cors());
 
 //routes middleware
 app.use('/api', dashboardRoutes);
 app.use('/api', slotRoutes);
+app.use('/api', appointmentRoutes);
 
 const port = process.env.PORT || 8009;
 

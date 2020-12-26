@@ -3,7 +3,7 @@ import React from 'react';
 const DisplayItem = ({item}) => {
     const showBooked = (isBooked) => {
         return isBooked === true ? (
-            <div className="badge badge-primary badge-pill">Booked</div>
+            <div className="badge badge-success badge-pill">Booked</div>
             ) : (
             <div className="badge badge-primary badge-pill">Yet to book</div>
             )
