@@ -29,6 +29,15 @@ exports.list =(req, res) => {
 
 exports.listSearch = (req, res) => {
     //create query object to hold search value and category
+    const query = {}
+    console.log("Req: ",req);
+
+    // if(req.query.search){
+    //     query.name = {$regex: req.query.search, $options: 'i'}
+
+    //     if(req.query.category && req.query.category != 'All'){
+    //         query.category = req.query.category
+    //     }
     
         Slot.find(req.query, (err, products) => {
             if(err){

@@ -30,6 +30,7 @@ const Dashboard = () => {
             }else{
                 console.log("Data from DB: ", data);
                 setSlotResult(data);
+                setSearchResult(false);
             }
         }
         )
@@ -53,6 +54,7 @@ const Dashboard = () => {
                     console.log(response.error);
                 }else{
                     setSearchResult(response);
+                    setSlotResult(false);
                     console.log("Searched Result: ", searchResult);
                 }
             })
@@ -64,14 +66,14 @@ const Dashboard = () => {
         let day = dateForSlotDisplay.getDate();
         let month = dateForSlotDisplay.getMonth() + 1;
         let year = dateForSlotDisplay.getFullYear();
-
-        searchData(`${month} ${day} ${year}`);
+        let date = `${month}-${day}-${year}`
+        searchData(date);
     }
     
     const selectDate = () =>(
         <form onSubmit={searchSubmit}>
             <div>
-                <DatePicker selected={dateForSlotDisplay} dateFormat="dd/MM/yyyy" showYearDropdown onChange={date => setSelectedDate(date)} />
+                <DatePicker selected={dateForSlotDisplay} dateFormat="dd/MM/yyyy" showYearDropdown onChange={date => setDateForSlotDisplay(date)} />
                 <button className="input-group-text">Search</button>
             </div>
         </form>
@@ -95,12 +97,12 @@ const Dashboard = () => {
         let endHr = endTime.getHours();
         let endMin = endTime.getMinutes();
         
-        let modifiedSelectedDate = `${month} ${day} ${year}`;
-        let modifiedStartTime = `${month} ${day} ${year} ${startHr}:${startMin}`
-        let modifiedEndTime = `${month} ${day} ${year} ${endHr}:${endMin}`
+        let modifiedSelectedDate = `${month}-${day}-${year}`;
+        let modifiedStartTime = `${month}-${day}-${year} ${startHr}:${startMin}`
+        let modifiedEndTime = `${month}-${day}-${year} ${endHr}:${endMin}`
 
-        let diffTime1 = new Date(`${month} ${day} ${year} ${startHr}:${startMin}`)
-        let diffTime2 = new Date(`${month} ${day} ${year} ${endHr}:${endMin}`)
+        let diffTime1 = new Date(`${month}-${day}-${year} ${startHr}:${startMin}`)
+        let diffTime2 = new Date(`${month}-${day}-${year} ${endHr}:${endMin}`)
         console.log("End  > Start : ",(diffTime2.getTime() > diffTime1.getTime()))
         console.log("Time Difference: ", (diffTime2.getTime() - diffTime1.getTime()))
 
@@ -150,7 +152,12 @@ const Dashboard = () => {
             <h2>List Slots:</h2> {selectDate()}
                 {/* {JSON.stringify(slotResult)} */}
             <div className="row">
-                {slotResult.map((slot, i) => (
+                {slotResult && slotResult.map((slot, i) => (
+                    <div key={i} className="col-xs">
+                        <DisplayItem item={slot} />
+                    </div>
+                ))}
+                {searchResult && searchResult.map((slot, i) => (
                     <div key={i} className="col-xs">
                         <DisplayItem item={slot} />
                     </div>
