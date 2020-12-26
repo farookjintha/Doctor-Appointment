@@ -7,7 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ModalForm from './ModalForm';
 import DisplayItem from './DisplayItem';
 
-import {createSlot, getSlots, list} from '../api/apiFunc';
+import {createSlot, getSlots, list, getAppointmentData, listAppointments } from '../api/apiFunc';
 
 const Dashboard = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -22,6 +22,17 @@ const Dashboard = () => {
     const [searchResult, setSearchResult] = useState(false);
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
+
+    
+
+    // const [appointmentData, setAppointmentData] = useState({
+    //     patientName: '',
+    //     selectedDateAppointment: '',
+    //     startTimeAppointment: '',
+    //     endTimeAppointment: ''
+    // });
+
+    // const {patientName, selectedDateAppointment, startTimeAppointment, endTimeAppointment} = appointmentData;
     
     const listSlots = () => (
         getSlots().then(data =>{
@@ -29,24 +40,21 @@ const Dashboard = () => {
                 setError(data.error);
             }else{
                 console.log("Data from DB: ", data);
+                setError('')
                 setSlotResult(data);
                 setSearchResult(false);
             }
-        }
-        )
+        })
     );
+
+    
 
     useEffect(()=>{
         listSlots();
         displaySlots();
     }, []);
 
-    useEffect(()=> {
-        // console.log("Start Time: ", startTime);
-        // console.log("End Time: ", endTime);
-    }, [startTime, endTime]);
-
-    const searchData = (date) => {
+    const searchSlotData = (date) => {
         if(date){
             list({selectedDate: date || undefined})
             .then(response => {
@@ -61,13 +69,14 @@ const Dashboard = () => {
         }
     }
 
+    
     const searchSubmit = (event) => {
         event.preventDefault();
         let day = dateForSlotDisplay.getDate();
         let month = dateForSlotDisplay.getMonth() + 1;
         let year = dateForSlotDisplay.getFullYear();
         let date = `${month}-${day}-${year}`
-        searchData(date);
+        searchSlotData(date);
     }
     
     const selectDate = () =>(
@@ -179,6 +188,9 @@ const Dashboard = () => {
     
                     <li className="nav-item">
                         <button className="btn btn-primary" onClick={handleModal} >Add Slot</button>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="btn btn-primary" to="/doctor/appointments" >Appointments</Link>
                     </li>
                 </ul>
                 </div>

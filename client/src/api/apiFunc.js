@@ -27,10 +27,32 @@ export const getSlots = () => {
     .catch(error => console.log(error));
 }
 
+export const getAppointmentData = () => {
+    return fetch(`http://localhost:8009/api/appointments`, {
+        method: "GET"
+    })
+    .then(res => {
+        return res.json()
+    })
+    .catch(error => console.log(error));
+}
+
 export const list = (params) => {
     const query = queryString.stringify(params)
     console.log(query);
     return fetch(`http://localhost:8009/api/slots/search?${query}`, {
+        method: "GET"
+    })
+    .then(res => {
+        return res.json()
+    })
+    .catch(error => console.log(error));
+}
+
+export const listAppointments = (params) => {
+    const query = queryString.stringify(params)
+    console.log(query);
+    return fetch(`http://localhost:8009/api/appointments/search?${query}`, {
         method: "GET"
     })
     .then(res => {
