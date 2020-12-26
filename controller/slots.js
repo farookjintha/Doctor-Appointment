@@ -3,17 +3,66 @@ const { errorHandler }  = require('../errorHandlers/dbErrorHandler');
 
 
 exports.create = (req, res) => {
+    console.log("Req: ", req.body)
     const slot = new Slot(req.body);
-
-    slot.save((err, data) => {
-        if(err){
-            return res.status(400).json({
-                error: errorHandler(err)
-            })
+    Slot.find(
+        {
+            $or: [
+                {
+                    $and: [
+                        {
+                            "startTime": {
+                                $lte: new Date(new Date(req.body.startTime))
+                            }
+                        }, {
+                            "endTime": {
+                                $gte: new Date(new Date(req.body.startTime))
+                            }
+                        }
+                    ]
+                }, {
+                    $and: [
+                        {
+                            "startTime": {
+                                $lte: new Date(new Date(req.body.endTime))
+                            }
+                        }, {
+                            "endTime": {
+                                $gte: new Date(new Date(req.body.endTime))
+                            }
+                        }
+                    ]
+                }, {
+                    $and: [
+                        {
+                            "startTime": {
+                                $gte: new Date(new Date(req.body.startTime))
+                            }
+                        }, {
+                                "endTime": {
+                                    $lte: new Date(new Date(req.body.endTime))
+                                }
+                            }
+                        ]
+                }
+                ]
         }
+    ).exec((err, response) => {
+        let count = response.length;
+        if(!count){
+            slot.save((err, data) => {
+                if(err){
+                    return res.status(400).json({
+                        error: errorHandler(err)
+                    })
+                }
+        
+                res.json({data});
+            });
+        }
+    })
 
-        res.json({data});
-    });
+    
 }
 
 exports.list =(req, res) => {
