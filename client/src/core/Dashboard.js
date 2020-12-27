@@ -22,6 +22,8 @@ const Dashboard = () => {
     const [searchResult, setSearchResult] = useState(false);
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [morningData, setMorningData] = useState([]);
+    const [eveningData, setEveningData] = useState([])
 
     
 
@@ -41,19 +43,13 @@ const Dashboard = () => {
             }else{
                 console.log("Data from DB: ", data);
                 setError('')
-                setSlotResult(data);
                 setSearchResult(false);
+                setSlotResult(data);
+                handleMrngEvngData();
             }
         })
     );
-
     
-
-    useEffect(()=>{
-        listSlots();
-        displaySlots();
-    }, []);
-
     const searchSlotData = (date) => {
         if(date){
             list({selectedDate: date || undefined})
@@ -61,11 +57,31 @@ const Dashboard = () => {
                 if(response.error){
                     console.log(response.error);
                 }else{
-                    setSearchResult(response);
                     setSlotResult(false);
-                    console.log("Searched Result: ", searchResult);
+                    setSearchResult(response);
+                    console.log("Search Result aaaaa: ", searchResult)
+                    handleMrngEvngData();
                 }
             })
+        }
+    }
+
+    useEffect(()=>{
+        listSlots();
+        displaySlots();
+    }, []);
+
+
+    const handleMrngEvngData = () => {
+        // let mrngData = [];
+        // let evngData = [];
+        if(searchResult){
+            let mrngData = searchResult.filter(slot => new Date(slot.startTime).getHours() < 12);
+            let evngData = searchResult.filter(slot => new Date(slot.startTime).getHours() > 12);
+            setMorningData(mrngData);
+            setEveningData(evngData);
+            console.log("mrngData on Search Result: ", mrngData);
+            console.log("evngData on Search Result: ", evngData);
         }
     }
 
@@ -166,11 +182,24 @@ const Dashboard = () => {
                         <DisplayItem item={slot} />
                     </div>
                 ))}
-                {searchResult && searchResult.map((slot, i) => (
-                    <div key={i} className="col-xs">
-                        <DisplayItem item={slot} />
+                <div className = "column">
+                    <div className="row">
+                        {searchResult && <div>Morning Slots: </div>}
+                        {searchResult && morningData  && morningData.map((slot, i) => (
+                            <div key={i} className=" col-xs">
+                                <DisplayItem item={slot} />
+                            </div>
+                        ))}
                     </div>
-                ))}
+                    <div className="row">
+                        {searchResult && <div>Evening Slots: </div>}
+                        {searchResult && eveningData && eveningData.map((slot, i) => (
+                            <div key={i} className="col-xs">
+                                <DisplayItem item={slot} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
     )
