@@ -3,7 +3,7 @@ const { errorHandler }  = require('../errorHandlers/dbErrorHandler');
 
 
 exports.create = (req, res) => {
-    console.log("Req: ", req.body)
+    // console.log("Req: ", req.body)
     const slot = new Slot(req.body);
     Slot.find(
         {
@@ -78,7 +78,7 @@ exports.list =(req, res) => {
 
 exports.listSearch = (req, res) => {
     const query = {}
-    console.log("Req: ",req);
+    // console.log("Req: ",req);
 
         Slot.find(req.query, (err, products) => {
             if(err){

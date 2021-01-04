@@ -140,14 +140,16 @@ const Dashboard = () => {
             }
             createSlot(payload).then(data => {
                 if(data.error){
-                    setError(data.error)
+                    setSuccess('')
+                    setError('Slot already exists');
                 }else{
                     setError('');
-                    setSuccess(true);
+                    setSuccess('Slot created successfully');
                 }
             });
             console.log(payload)
         }else{
+            setSuccess('');
             diffTime2.getTime() < diffTime1.getTime() ? setError("End Time should be greater than Start Time") : 
                 setError("Slot time should not exceed 30 min")
         }
