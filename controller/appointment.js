@@ -14,7 +14,7 @@ exports.create = (req, res) => {
         // console.log("Response from Slot: ", response);
         let count = response.length;
         if(!count){
-            res.status(404).send("No slot available at the selected time!!!")
+            res.status(400).send("No slot available at the selected time!!!")
         }
         if(count){
             appointment.save((err, result) => {
